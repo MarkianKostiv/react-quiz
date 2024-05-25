@@ -12,6 +12,7 @@ export const QuizPage = () => {
   const [score, setScore] = useState<number | null>(null);
   const [isTimeUp, setIsTimeUp] = useState(false);
   const [feedback, setFeedback] = useState<{ [key: number]: boolean }>({});
+  const [time, setTime] = useState<Date | null>(null);
 
   useEffect(() => {
     const quizzes = localStorage.getItem("quizArray");
@@ -25,6 +26,13 @@ export const QuizPage = () => {
           {}
         );
         setUserAnswers(initialAnswers);
+
+        const timeInSeconds = selectedQuiz.time * 60;
+        const expiryTimestamp = new Date();
+        expiryTimestamp.setSeconds(
+          expiryTimestamp.getSeconds() + timeInSeconds
+        );
+        setTime(expiryTimestamp);
       }
     }
   }, [quizId]);
@@ -57,14 +65,18 @@ export const QuizPage = () => {
     }
   }, [isTimeUp]);
 
-  const time = new Date();
-  time.setSeconds(time.getSeconds() + 30); // 5 minutes timer
-
   const { seconds, minutes, isRunning, start, pause, resume, restart } =
     useTimer({
-      expiryTimestamp: time,
+      expiryTimestamp: time || new Date(),
       onExpire: () => setIsTimeUp(true),
+      autoStart: false,
     });
+
+  useEffect(() => {
+    if (time) {
+      restart(time);
+    }
+  }, [time]);
 
   if (!quiz) {
     return <div>Loading...</div>;

@@ -77,7 +77,7 @@ export const CreateQuizForm = ({ isAddOrUpdate }: FromProps) => {
               className={`w-full flex flex-col 
             items-center justify-center bg-[#4D6CFA] gap-8 rounded-lg`}
             >
-              <div className='w-full flex items-center pt-4 pb-4 pl-8 pr-8'>
+              <div className='w-full gap-3 flex items-center pt-4 pb-4 pl-8 pr-8'>
                 <label className='flex flex-col items-start justify-center'>
                   Quiz Name:
                   <Field
@@ -88,6 +88,20 @@ export const CreateQuizForm = ({ isAddOrUpdate }: FromProps) => {
                   />
                   <ErrorMessage
                     name='name'
+                    component='span'
+                    className='text-red-500 text-sm mt-1'
+                  />
+                </label>
+                <label className='flex flex-col items-start justify-center'>
+                  Quiz Time im minutes:
+                  <Field
+                    type='number'
+                    id='time'
+                    name='time'
+                    className='pl-4 border-2 border-black rounded-lg h-8 w-10'
+                  />
+                  <ErrorMessage
+                    name='time'
                     component='span'
                     className='text-red-500 text-sm mt-1'
                   />

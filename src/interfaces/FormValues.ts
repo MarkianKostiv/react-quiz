@@ -12,5 +12,6 @@ interface Question {
 export interface FormValues {
   id: string;
   name: string;
+  time: number;
   questions: Question[];
 }

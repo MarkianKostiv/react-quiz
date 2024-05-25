@@ -1,6 +1,10 @@
 import * as Yup from "yup";
 export const validationSchema = Yup.object().shape({
   name: Yup.string().required("Quiz name is required"),
+  time: Yup.number()
+    .typeError("Points must be a number")
+    .required("Points is required")
+    .min(1, "Minimum 1 point"),
   questions: Yup.array().of(
     Yup.object().shape({
       question: Yup.string().required("Question is required"),
