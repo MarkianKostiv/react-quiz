@@ -1,14 +1,11 @@
 import { FormValues } from "../interfaces/FormValues";
-import { toast } from "react-toastify";
-export const deleteQuiz = (
-  quizId: string,
-  array: FormValues[],
-  setFunc: (quizzes: FormValues[]) => void
-) => {
-  const updatedArray = array.filter((item: any) => item.id !== quizId);
-  console.log(updatedArray);
-  setFunc(updatedArray);
-  const strArray = JSON.stringify(updatedArray);
-  localStorage.setItem("quizArray", strArray);
-  toast.success(`Quiz deleted successfully!`);
+export const deleteQuiz = (id: string) => {
+  const quizzes = localStorage.getItem("quizArray");
+  if (quizzes) {
+    const parsedQuizzes = JSON.parse(quizzes);
+    const updatedQuizzes = parsedQuizzes.filter(
+      (quiz: FormValues) => quiz.id !== id
+    );
+    localStorage.setItem("quizArray", JSON.stringify(updatedQuizzes));
+  }
 };

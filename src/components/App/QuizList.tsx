@@ -29,6 +29,13 @@ export const QuizList = ({
     setQuizzesList(originalQuizzes);
   };
 
+  const handleDelete = (id: string) => {
+    const updatedQuizzes = originalQuizzes.filter((quiz) => quiz.id !== id);
+    setOriginalQuizzes(updatedQuizzes);
+    setQuizzesList(updatedQuizzes);
+    deleteQuiz(id);
+  };
+
   return (
     <div className='w-full flex flex-col items-center justify-center gap-6 pb-4'>
       <h2>Quizzes List</h2>
@@ -77,7 +84,7 @@ export const QuizList = ({
               </Link>
               <button
                 className={`font-semibold text-xl px-6 py-4 bg-[#f6623d] hover:bg-[#9d4b36] duration-300 rounded-xl transform active:scale-95 active:bg-[#f5b8a9] focus:outline-none shadow-md hover:shadow-lg active:shadow-none`}
-                onClick={() => deleteQuiz(item.id, quizzes, setQuizzesList)}
+                onClick={() => handleDelete(item.id)}
               >
                 Delete Quiz
               </button>

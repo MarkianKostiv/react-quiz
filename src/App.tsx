@@ -9,6 +9,9 @@ import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const [quizzesList, setQuizzesList] = useState<FormValues[]>([]);
+  const [originalQuizzesList, setOriginalQuizzesList] = useState<FormValues[]>(
+    []
+  );
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -16,6 +19,7 @@ function App() {
       try {
         const quizzes = await getDataLS("quizArray");
         setQuizzesList(quizzes);
+        setOriginalQuizzesList(quizzes);
         if (!quizzes || quizzes.length === 0) {
           localStorage.setItem("quizArray", JSON.stringify([]));
         }
@@ -50,11 +54,22 @@ function App() {
       ) : quizzesList.length > 0 ? (
         <QuizList
           quizzesList={quizzesList}
-          quizzes={quizzesList}
+          quizzes={originalQuizzesList}
           setQuizzesList={setQuizzesList}
         />
       ) : (
-        <p className='p-8 text-red-400'>There are no quizzes for now</p>
+        <div className='flex flex-col items-center'>
+          <p className='p-8 text-red-400'>There are no quizzes for now</p>
+          <button
+            onClick={() => setQuizzesList(originalQuizzesList)}
+            className={`font-semibold text-xl pt-4 pb-4 pr-6 pl-6 
+              bg-gray-500 hover:bg-gray-600 
+              duration-300 rounded-xl transform active:scale-95 
+              active:bg-gray-700 focus:outline-none shadow-md hover:shadow-lg active:shadow-none`}
+          >
+            Reset
+          </button>
+        </div>
       )}
     </div>
   );
