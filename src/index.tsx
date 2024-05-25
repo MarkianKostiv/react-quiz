@@ -5,6 +5,7 @@ import App from "./App";
 import { CreateQuizForm } from "./pages/CreateQuizForm/CreateQuizForm";
 import reportWebVitals from "./reportWebVitals";
 import "./index.css";
+import { QuizPage } from "./pages/QuizPages/QuizPage";
 
 const router = createBrowserRouter([
   {
@@ -12,6 +13,7 @@ const router = createBrowserRouter([
     element: <App />,
   },
   { path: "createQuiz/", element: <CreateQuizForm /> },
+  { path: "quiz/:quizId", element: <QuizPage /> },
 ]);
 
 const root = ReactDOM.createRoot(
