@@ -1,18 +1,62 @@
+import { useState, useEffect } from "react";
 import { Formik, Form, FieldArray, Field, ErrorMessage } from "formik";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { validationSchema } from "./validationSchema";
-import { initialValues } from "./initialValues";
 import { onSubmit } from "./onSubmit";
+import { initialValues } from "./initialValues";
+import { getDataLS } from "../../functions/getDataLS";
+import { FormValues } from "../../interfaces/FormValues";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-export const CreateQuizForm = () => {
+interface FromProps {
+  isAddOrUpdate: string;
+}
+
+export const CreateQuizForm = ({ isAddOrUpdate }: FromProps) => {
+  const [startInitialValues, setStartInitialValues] =
+    useState<FormValues>(initialValues);
+  const { quizId } = useParams<{ quizId: string }>();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        if (isAddOrUpdate === "Add") {
+          setStartInitialValues(initialValues);
+        } else if (isAddOrUpdate === "Update" && quizId) {
+          const quizValues = await getDataLS("quizArray");
+          const selectedQuiz = quizValues.find((item) => item.id === quizId);
+          if (selectedQuiz) {
+            setStartInitialValues(selectedQuiz);
+          }
+        }
+      } catch (error) {
+        toast.error("Error fetching data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [isAddOrUpdate, quizId]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className='w-full flex flex-col'>
-      <h1>Create Quiz</h1> <Link to={"/"}>Main</Link>
+      <ToastContainer />
+      <h1>Create Quiz</h1>
+      <Link to={"/"}>Main</Link>
       <div className='w-full flex items-center justify-center'>
         <Formik
-          initialValues={initialValues}
+          initialValues={startInitialValues}
           validationSchema={validationSchema}
           onSubmit={onSubmit}
+          enableReinitialize={true}
         >
           {({ values }) => (
             <Form className='w-full flex flex-col items-center justify-center bg-gray-800 gap-8'>
@@ -139,7 +183,6 @@ export const CreateQuizForm = () => {
                           >
                             Add Question
                           </button>
-
                           <button
                             type='button'
                             onClick={() => remove(index)}

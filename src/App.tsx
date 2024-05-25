@@ -6,16 +6,29 @@ import { getDataLS } from "./functions/getDataLS";
 import { FormValues } from "./interfaces/FormValues";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 function App() {
-  const quizArray: any = [];
-  const quizzes: FormValues[] = getDataLS("quizArray");
-  if (!quizzes) {
-    localStorage.setItem("quizArray", quizArray);
-  }
   const [quizzesList, setQuizzesList] = useState<FormValues[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
   useEffect(() => {
-    setQuizzesList(quizzes);
+    const fetchQuizzes = async () => {
+      try {
+        const quizzes = await getDataLS("quizArray");
+        setQuizzesList(quizzes);
+        if (!quizzes || quizzes.length === 0) {
+          localStorage.setItem("quizArray", JSON.stringify([]));
+        }
+      } catch (error) {
+        toast.error("Error fetching quizzes from local storage");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchQuizzes();
   }, []);
+
   return (
     <div
       className={`font-extrabold text-3xl flex w-full 
@@ -32,10 +45,12 @@ function App() {
           Create your Quiz
         </button>
       </Link>
-      {quizzesList ? (
+      {loading ? (
+        <p className='p-8 text-gray-400'>Loading quizzes...</p>
+      ) : quizzesList.length > 0 ? (
         <QuizList
-          quizzesList={quizzes}
-          quizzes={quizzes}
+          quizzesList={quizzesList}
+          quizzes={quizzesList}
           setQuizzesList={setQuizzesList}
         />
       ) : (

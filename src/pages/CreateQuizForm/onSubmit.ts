@@ -1,5 +1,6 @@
 import { FormikHelpers } from "formik";
 import { FormValues } from "../../interfaces/FormValues";
+import { ToastContainer, toast } from "react-toastify";
 export const onSubmit = (
   data: FormValues,
   { resetForm }: FormikHelpers<FormValues>
@@ -15,25 +16,33 @@ export const onSubmit = (
     const storageArray = localStorage.getItem("quizArray");
     let quizArray: FormValues[] = [];
 
-    // If there is already an array in local storage, parse it
     if (storageArray) {
       try {
         quizArray = JSON.parse(storageArray);
       } catch (e) {
         console.error("Error parsing local storage data:", e);
-        // Clear corrupted data
         localStorage.removeItem("quizArray");
       }
     }
 
-    // Add the new quiz data to the array
-    quizArray.push(data);
+    // Check if the quiz with the same id already exists
+    const existingQuizIndex = quizArray.findIndex(
+      (quiz) => quiz.id === data.id
+    );
 
-    // Save the updated array back to local storage
+    if (existingQuizIndex !== -1) {
+      // Replace the existing quiz with the updated one
+      toast.success("Quiz was update successfully!");
+      quizArray[existingQuizIndex] = data;
+      resetForm();
+    } else {
+      // Add the new quiz
+      toast.success("New Quiz was added successfully!");
+      quizArray.push(data);
+    }
+
     localStorage.setItem("quizArray", JSON.stringify(quizArray));
-
     console.log("Form submitted successfully:", data);
-    resetForm();
   } else {
     console.error("Each question must have exactly one true answer.");
   }

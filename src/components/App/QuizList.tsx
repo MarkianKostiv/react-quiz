@@ -14,7 +14,7 @@ export const QuizList = ({
   setQuizzesList,
 }: QuizListProps) => {
   return (
-    <div className='w-full flex flex-col items-center justify-center gap-6'>
+    <div className='w-full flex flex-col items-center justify-center gap-6 pb-4'>
       <h2>Quizzes List</h2>
       <ul className='flex flex-wrap gap-5'>
         {quizzesList.map((item) => {
@@ -24,7 +24,7 @@ export const QuizList = ({
               key={item.id}
             >
               <h2>{item.name}</h2>
-              <div className='flex justify-between items-center gap-5'>
+              <div className='flex flex-wrap justify-between items-center gap-5'>
                 <Link to={`/quiz/${item.id}`}>
                   <button
                     className={`font-semibold text-xl pt-4 pb-4 pr-6 pl-6
@@ -33,6 +33,16 @@ export const QuizList = ({
                     active:bg-[#fedd9f] focus:outline-none shadow-md hover:shadow-lg active:shadow-none`}
                   >
                     Start Quiz
+                  </button>
+                </Link>
+                <Link to={`updateQuiz/${item.id}`}>
+                  <button
+                    className={`font-semibold text-xl pt-4 pb-4 pr-6 pl-6
+                    bg-[#3dddf6] hover:bg-[#3994a2]
+                    duration-300 rounded-xl transform active:scale-95
+                    active:bg-[#88ecfb] focus:outline-none shadow-md hover:shadow-lg active:shadow-none`}
+                  >
+                    Edit Quiz
                   </button>
                 </Link>
                 <button

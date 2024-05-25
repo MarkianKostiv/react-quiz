@@ -12,7 +12,14 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
   },
-  { path: "createQuiz/", element: <CreateQuizForm /> },
+  {
+    path: "createQuiz/",
+    element: <CreateQuizForm isAddOrUpdate={"Add"} />,
+  },
+  {
+    path: "updateQuiz/:quizId",
+    element: <CreateQuizForm isAddOrUpdate={"Update"} />,
+  },
   { path: "quiz/:quizId", element: <QuizPage /> },
 ]);
 
